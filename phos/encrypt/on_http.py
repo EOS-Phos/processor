@@ -1,39 +1,47 @@
+import os
 import json
 import boto3
-BUCKET = os.environ['S3_BUCKET']
+import requests
+from io import BytesIO
 
+BUCKET = os.environ["BUCKET"]
+
+# npx sls invoke local -f reencrypt_on_http_request --data '{"filename":"my-path-name.txt"}'
 
 def main(event, context):
 
-    print(context)
-    print(context["requestContext"])
-    if context["requestContext"]["httpMethod"] == "GET":
-        get_data = json.loads(context['pathParameters'])
-        print(get_data)
+    # file names
+    input_filename = event["filename"]
+    output_filename = 'my-new-path-name.txt'
 
-    file_name = "my-new-path-name"
-
+    # download file
     get_url = "http://{bucket}.s3.amazonaws.com/{object}".format(
-                bucket=BUCKET, object=key)
+                bucket=BUCKET, object=input_filename)
 
-    in_file = open("in-file", "rb") # opening for [r]eading as [b]inary
-    data = in_file.read() # if you only wanted to read 512 bytes, do .read(512)
-    in_file.close()
+    response = requests.get(get_url)
+    img_data = BytesIO(response.content)
 
+    # setup S3 connection
     s3 = boto3.resource('s3')
-    bucket = s3.Bucket("eos-phos-dev")
-    path = 'my-new-path-name.txt'
+    bucket = s3.Bucket(BUCKET)
 
+    # do something magical
+
+    # save new file in the bucket
     bucket.put_object(
         ACL='public-read',
         ContentType='application/json',
-        Key=path,
-        Body=data,
+        Key=output_filename,
+        Body=img_data,
         )
 
+    new_url = "http://{bucket}.s3.amazonaws.com/{object}".format(
+                        bucket=BUCKET, object=output_filename)
 
-
-    body = {}
+    body = {
+        "input_file":input_filename,
+        "output_file": output_filename
+    }
     response = {
         "statusCode": 200,
         "body": json.dumps(body)

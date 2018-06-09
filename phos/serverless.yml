@@ -30,7 +30,7 @@ package:
 functions:
 
   reencrypt_on_s3_upload:
-    handler: encrypt.on_s3_upload.main
+    handler: encrypt/on_s3_upload.main
     events:
       - s3:
           bucket: ${self:custom.bucket}
@@ -39,12 +39,13 @@ functions:
             - suffix: .jpg
 
   reencrypt_on_http_request:
-    handler: encrypt.on_http.main
+    handler: encrypt/on_http.main
     events:
        - http:
            path: reencrypt
            method: get
-
+    environment:
+      BUCKET: ${self:custom.bucket}
 
 
 #    The following are a few example events you can configure
