@@ -12,7 +12,7 @@ def main(event, context):
 
     # get file from s3
     input_filename = event["filename"]
-    load_file_data_from_s3(input_filename)
+    file_data = load_file_data_from_s3(input_filename)
 
 
 
@@ -23,7 +23,7 @@ def main(event, context):
 
 
     # Save file to s3
-    save_file_data_to_s3(output_filename)
+    save_file_data_to_s3(file_data, output_filename)
 
 
     body = {
@@ -46,7 +46,7 @@ def load_file_data_from_s3(input_filename):
     return file_data
 
 
-def load_file_data_to_s3(output_filename):
+def save_file_data_to_s3(file_data, output_filename):
     # setup S3 connection
     s3 = boto3.resource('s3')
     bucket = s3.Bucket(BUCKET)
@@ -56,7 +56,7 @@ def load_file_data_to_s3(output_filename):
         ACL='public-read',
         ContentType='application/json',
         Key=output_filename,
-        Body=img_data,
+        Body=file_data,
         )
 
     new_url = "http://{bucket}.s3.amazonaws.com/{object}".format(
