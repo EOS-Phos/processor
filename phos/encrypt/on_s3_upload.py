@@ -2,7 +2,7 @@ import json
 import boto3
 BUCKET = os.environ['S3_BUCKET']
 
-def reencrypt_on_s3_upload(event, context):
+def main(event, context):
     import requests
 
     logger.debug('event: {}'.format(event))
@@ -55,28 +55,6 @@ def reencrypt_on_s3_upload(event, context):
 
     return {'statusCode': httplib.ACCEPTED}
 
-    body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
-    }
-
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
-
-    return response
-
-    # Use this code if you don't use the http event with the LAMBDA-PROXY
-    # integration
-    """
-    return {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "event": event
-    }
-    """
-
-def reencrypt_on_http_request(event, context):
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
         "input": event
