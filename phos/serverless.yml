@@ -19,10 +19,10 @@ custom:
 
 
 # you can add packaging information here
-#package:
-#  include:
-#    - include-me.py
-#    - include-me-dir/**
+package:
+ include:
+   - encrypt/**
+   # - include-me.py
 #  exclude:
 #    - exclude-me.py
 #    - exclude-me-dir/**
