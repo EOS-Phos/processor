@@ -1,7 +1,7 @@
 import json
 
 
-def hello(event, context):
+def reencrypt_on_s3_upload(event, context):
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
         "input": event
@@ -22,3 +22,16 @@ def hello(event, context):
         "event": event
     }
     """
+
+def reencrypt_on_http_request(event, context):
+    body = {
+        "message": "Go Serverless v1.0! Your function executed successfully!",
+        "input": event
+    }
+
+    response = {
+        "statusCode": 200,
+        "body": json.dumps(body)
+    }
+
+    return response

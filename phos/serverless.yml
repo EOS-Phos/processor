@@ -28,14 +28,24 @@ custom:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+
+  reencrypt_on_s3_upload:
+    handler: handler.reencrypt_on_s3_upload
     events:
       - s3:
           bucket: ${self:custom.bucket}
           event: s3:ObjectCreated:*
           rules:
             - suffix: .jpg
+
+  reencrypt_on_http_request:
+    handler: handler:reencrypt_on_http_request
+    events:
+       - http:
+           path: reencrypt
+           method: get
+
+
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
