@@ -10,22 +10,46 @@ BUCKET = os.environ["BUCKET"]
 
 def main(event, context):
 
-    # file names
+    # get file from s3
     input_filename = event["filename"]
+    load_file_data_from_s3(input_filename)
+
+
+
+
+    # do something magical
     output_filename = 'my-new-path-name.txt'
 
+
+
+    # Save file to s3
+    save_file_data_to_s3(output_filename)
+
+
+    body = {
+        "input_file":input_filename,
+        "output_file": output_filename
+    }
+    return {
+        "statusCode": 200,
+        "body": json.dumps(body)
+    }
+
+
+def load_file_data_from_s3(input_filename):
     # download file
     get_url = "http://{bucket}.s3.amazonaws.com/{object}".format(
                 bucket=BUCKET, object=input_filename)
 
     response = requests.get(get_url)
-    img_data = BytesIO(response.content)
+    file_data = BytesIO(response.content)
+    return file_data
 
+
+def load_file_data_to_s3(output_filename):
     # setup S3 connection
     s3 = boto3.resource('s3')
     bucket = s3.Bucket(BUCKET)
-
-    # do something magical
 
     # save new file in the bucket
     bucket.put_object(
@@ -38,13 +62,4 @@ def main(event, context):
     new_url = "http://{bucket}.s3.amazonaws.com/{object}".format(
                         bucket=BUCKET, object=output_filename)
 
-    body = {
-        "input_file":input_filename,
-        "output_file": output_filename
-    }
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
-
-    return response
+    return
