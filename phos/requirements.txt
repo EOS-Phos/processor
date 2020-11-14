@@ -13,7 +13,7 @@ Flask==1.0.2
 humanize==0.5.1
 idna==2.6
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.10.1
 jmespath==0.9.3
 kademlia==1.0
 lmdb==0.94
